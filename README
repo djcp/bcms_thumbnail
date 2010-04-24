@@ -34,7 +34,7 @@ The above, but only for images with a certain tag? Oh, hell yes:
 
 Note: The code above is yucky. But cool.
 
-== Example geometries
+== Geometries
 
 ImageMagick will preserve aspect ratio with all the geometries below: 
 
@@ -51,6 +51,12 @@ More info on ImageMagick geometry here: http://www.imagemagick.org/www/command-l
 * Hook image de-caching into the page de-caching control built into the bcms backend.
 * Beef up the thumbnail helper to expose more mini_magick features.
 * Better error reporting and sanity checking. 
+
+== Installation
+
+ gem install bcms_thumbnail
+
+and then follow the standard module installation instructions here: http://guides.browsercms.org/installing_modules.html  
 
 == Requires
 
