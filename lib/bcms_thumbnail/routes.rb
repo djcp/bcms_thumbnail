@@ -1,7 +1,7 @@
 module Cms::Routes
   def routes_for_bcms_thumbnail
     namespace(:cms) do |cms|
-      #cms.content_blocks :thumbnails
+      #nothing, just here to make the default install process happy.
     end  
   end
 end
