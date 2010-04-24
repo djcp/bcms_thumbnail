@@ -18,7 +18,7 @@ Add a dynamic portlet and the add this to the template:
 
 == Example geometries
 
-ImageMagick will preserve aspect ratio with all the below geometries: 
+ImageMagick will preserve aspect ratio with all the geometries below: 
  * "125" will ensure the width is no more than 125px.
  * "x125" will ensure the height is no more than 125px.
  * "125x125" will ensure neither side is more than 125px.
@@ -35,9 +35,13 @@ More info on ImageMagick geometry here: http://www.imagemagick.org/www/command-l
 
 == Requires
 
- * ImageMagick
- * mini_magick >= 1.2.5
+ * The mini_magick gem, version >= 1.2.5
 
 == Author
 
 Dan Collis-Puro, http://collispuro.com, http://github.com/djcp/
+
+== License
+
+This extension is licensed under the Gnu LGPL: http://www.gnu.org/licenses/lgpl.html
+
