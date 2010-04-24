@@ -1,28 +1,47 @@
 == browser_cms thumbnail extension
 
-This extension adds a "thumbnail" view helper that takes an content_block with an attachment (an ImageBlock or a custom content block) and creates a thumbnail according to the ImageMagick geometry you specify.
+This extension adds a "thumbnail" view helper that takes a content_block with an attachment (an ImageBlock or a custom content_block) and creates a thumbnail according to the ImageMagick geometry you specify.
 
 * Supports png, jpg, gif, and bmp formats. Thumbnails are output in jpg format.
 * The default geometry is "100x100" - so no side larger than 100 pixels.  
-* It caches these thumbnails in the directory RAILS_ROOT/public/bcms_thumbnail_cache/. It will create this directory automatically if it doesn't exist.
+* It caches these thumbnails in the directory RAILS_ROOT/public/bcms_thumbnail_cache/. We'll create this directory automatically if needed.
 * Use the "bcms_thumbnail:clear" rake task to clear the thumbnail cache.
 * Thumbnails are public. They are served directly off the filesystem.
 
-== Example markup 
+== Examples
 
-Below is the minimal case that demonstrates creating a thumbnail. This overrides the default 100x100 geometry and creates images of no larger than 125 pixels on any side. 
+It's pretty simple. The code below demonstrates creating a thumbnail from an image block, which (naturally) has a browser_cms attachment. This code overrides the default 100x100 geometry and creates images of no larger than 125 pixels on any side. 
 
 Add a dynamic portlet and the add this to the template:
   <% image = ImageBlock.find(:first) %>
   <%= image_tag(thumbnail(image,'125x125')) %>
 
+A stupidly simple image gallery? It's easier than you think! Again, in a dynamic portlet:
+
+ <div class="gallery">
+   <% ImageBlock.find(:all).each do |image| %>
+     <div class="image"><%= link_to(image_tag(thumbnail(image,'100x100'), :alt => image.name),image.attachment.file_path) %></div>
+   <% end %>
+ </div>
+
+The above, but only for images with a certain tag? Oh, hell yes:
+
+ <div class="gallery">
+   <% Tag.find_by_name('lol').taggings.find(:all, :conditions => ['taggable_type = ?', 'AbstractFileBlock']).collect{|img| img.taggable}.each do |image| %>
+     <div class="image"><%= link_to(image_tag(thumbnail(image,'100x100'), :alt => image.name),image.attachment.file_path) %></div>
+   <% end %>
+ </div>
+
+Note: The code above is yucky. But cool.
+
 == Example geometries
 
 ImageMagick will preserve aspect ratio with all the geometries below: 
- * "125" will ensure the width is no more than 125px.
- * "x125" will ensure the height is no more than 125px.
- * "125x125" will ensure neither side is more than 125px.
- * "50%" will scale the image to half its size.
+
+* "125" will ensure the width is no more than 125px.
+* "x125" will ensure the height is no more than 125px.
+* "125x125" will ensure neither side is more than 125px.
+* "50%" will scale the image to half its size.
 
 More info on ImageMagick geometry here: http://www.imagemagick.org/www/command-line-processing.html#geometry
 
@@ -35,7 +54,8 @@ More info on ImageMagick geometry here: http://www.imagemagick.org/www/command-l
 
 == Requires
 
- * The mini_magick gem, version >= 1.2.5
+* The mini_magick gem, version >= 1.2.5
+* ImageMagick, to satisfy the above.
 
 == Author
 
