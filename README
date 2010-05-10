@@ -34,6 +34,10 @@ The above, but only for images with a certain tag? Oh, hell yes:
 
 Note: The code above is yucky. But cool.
 
+You can also create square thumbnails via the "thumbnail_square" helper. You should only pass a single integer in for geometry when create a square thumbnail.
+  <% image = ImageBlock.find(:first) %>
+  <%= image_tag(thumbnail_square(image,'125')) %>
+
 == Geometries
 
 ImageMagick will preserve aspect ratio with all the geometries below: 
@@ -45,10 +49,15 @@ ImageMagick will preserve aspect ratio with all the geometries below:
 
 More info on ImageMagick geometry here: http://www.imagemagick.org/www/command-line-processing.html#geometry
 
+Remember that "thumbnail_square" only requires a single integer for its geometry string.
+
+== Gotchas
+
+* Thumbnails are generated when the helper method is called. If you clear the thumbnail cache and don't clear the page cache right afterwards, you may have cached pages calling for thumbnails that aren't regenerated - because the helper method call creates the image.  Be sure to clear your page cache after clearing your thumbnail cache and you'll be fine.
+* Speaking of caches - this does nothing to automatically clean up old cached thumbnails from images that've changed or that've been deleted. If you find that these old thumbnails are eating up too much space, Use the rake task to clear out the cache. Be sure to follow it with a page cache flush.
+
 == Todo
 
-* Decache thumbnails when image attachments change via a monkey-patch on the bcms core attachment features.
-* Hook image de-caching into the page de-caching control built into the bcms backend.
 * Beef up the thumbnail helper to expose more mini_magick features.
 * Better error reporting and sanity checking. 
 
