@@ -10,11 +10,11 @@ This extension adds a "thumbnail" view helper that takes a content_block with an
 
 == Examples
 
-It's pretty simple. The code below demonstrates creating a thumbnail from an image block, which (naturally) has a browser_cms attachment. This code overrides the default 100x100 geometry and creates images of no larger than 125 pixels on any side. 
+It's pretty simple. The code below demonstrates creating a thumbnail from an image block, which (naturally) has a browser_cms attachment. This code overrides the default 100x100 geometry and creates images of no larger than 125 pixels on any side, with a quality of 85.
 
 Add a dynamic portlet and the add this to the template:
   <% image = ImageBlock.find(:first) %>
-  <%= image_tag(thumbnail(image,'125x125')) %>
+  <%= image_tag(thumbnail(image,'125x125',85)) %>
 
 A stupidly simple image gallery? It's easier than you think! Again, in a dynamic portlet:
 
@@ -37,6 +37,12 @@ Note: The code above is yucky. But cool.
 You can also create square thumbnails via the "thumbnail_square" helper. You should only pass a single integer in for geometry when create a square thumbnail.
   <% image = ImageBlock.find(:first) %>
   <%= image_tag(thumbnail_square(image,'125')) %>
+
+So "thumbnail" and "thumbnail_square" accept three parameters:
+
+# The object with the attachment,
+# The geometry, and
+# An integer representing the JPG compression level, from 1 to 100. Default is 85.
 
 == Geometries
 

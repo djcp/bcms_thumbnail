@@ -4,21 +4,21 @@ module ActionView
   module Helpers
     module_function
 
-    def thumbnail(attachment_obj,geometry = '100x100')
-      thumbnail_engine(attachment_obj,geometry,false)
+    def thumbnail(attachment_obj,geometry = '100x100', quality = 85)
+      thumbnail_engine(attachment_obj, geometry, false, quality)
     end
 
-    def thumbnail_square(attachment_obj,geometry = '100')
+    def thumbnail_square(attachment_obj,geometry = '100', quality = 85)
       fixed_geometry = geometry
       if geometry.match(/\D/)
         fixed_geometry = geometry.split(/\D/)[0]
       end
-      thumbnail_engine(attachment_obj,geometry,true)
+      thumbnail_engine(attachment_obj, geometry, true, quality)
     end
 
-    def thumbnail_engine(attachment_obj,geometry = '100x100',square = false)
+    def thumbnail_engine(attachment_obj,geometry = '100x100',square = false, quality = 85)
       if ! attachment_obj.blank? && attachment_obj.respond_to?('attachment') && ['jpg','png','gif','bmp'].include?(attachment_obj.attachment.file_extension.downcase)
-        thumbnail_location = "/bcms_thumbnail_cache/#{geometry}/#{attachment_obj.attachment.file_location.gsub(/[\\\/]/,'-')}#{(square) ? '-square' : ''}.jpg"
+        thumbnail_location = "/bcms_thumbnail_cache/#{geometry}/#{attachment_obj.attachment.file_location.gsub(/[\\\/]/,'-')}#{(square) ? '-square' : ''}#{quality}.jpg"
         if ! File.exists?("#{RAILS_ROOT}/public#{thumbnail_location}")
           if ! File.exists?("#{RAILS_ROOT}/public/bcms_thumbnail_cache/#{geometry}")
             FileUtils.mkdir_p("#{RAILS_ROOT}/public/bcms_thumbnail_cache/#{geometry}")
@@ -26,6 +26,7 @@ module ActionView
             FileUtils.chmod 0755, "#{RAILS_ROOT}/public/bcms_thumbnail_cache/#{geometry}"
           end
           image = MiniMagick::Image.from_file("#{RAILS_ROOT}/tmp/uploads/#{attachment_obj.attachment.file_location}")
+          image.quality quality
           if square
             if image[:width] < image[:height]
               remove = ((image[:height] - image[:width])/2).round
